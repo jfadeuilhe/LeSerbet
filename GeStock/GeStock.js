@@ -1,0 +1,1 @@
+﻿//Modifier le modèle externe...//model.SYS_FIC_EXTERNES.toto.onGet = function(){};model.SYS_FIC_EXTERNES.onRestrictingQuer = function(){	//var sel = ds.SYS_FIC_EXTERNES.query("nv_DispoDansRapports = :1", true);		//return sel;	};

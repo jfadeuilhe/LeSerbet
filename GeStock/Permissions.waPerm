@@ -1,0 +1,3 @@
+﻿<?xml version="1.0" encoding="UTF-8"?><permissions>
+	<allow action="read" groupName="Commerce" groupID="7B56278BD87D4FE580FBA89CAA05E950" resource="Model" temporaryForcePermissions="false" type="model"/>
+</permissions>
