@@ -14,36 +14,60 @@ function constructor (id) {
 
 	// @region namespaceDeclaration// @startlock
 	var bRapports = {};	// @button
-	var bTDB = {};	// @button
+	var bTabDeBord = {};	// @button
 	var bArticles = {};	// @button
 	var bClients = {};	// @button
 	// @endregion// @endlock
 
 	// eventHandlers// @lock
-
+	
+	var curState = ""; 	//Articles
+	affState("Articles");
+	
 	bRapports.click = function bRapports_click (event)// @startlock
 	{// @endlock
-		$$(getHtmlId('ecransComp')).loadComponent('/Rapports.waComponent');
+		chgState("Rapports"); //$$(getHtmlId('ecransComp')).loadComponent('/Rapports.waComponent');
 	};// @lock
 
-	bTDB.click = function bTDB_click (event)// @startlock
+	bTabDeBord.click = function bTabDeBord_click (event)// @startlock
 	{// @endlock
-		$$(getHtmlId('ecransComp')).loadComponent('/TabDeBord.waComponent');
+		chgState("TabDeBord"); //$$(getHtmlId('ecransComp')).loadComponent('/TabDeBord.waComponent');
 	};// @lock
 
 	bArticles.click = function bArticles_click (event)// @startlock
 	{// @endlock
-		$$(getHtmlId('ecransComp')).loadComponent('/Articles.waComponent');
+		chgState("Articles"); //$$(getHtmlId('ecransComp')).loadComponent('/Articles.waComponent');
 	};// @lock
 
 	bClients.click = function bClients_click (event)// @startlock
 	{// @endlock
-		$$(getHtmlId('ecransComp')).loadComponent('/Clients.waComponent');
+		chgState("Clients"); //$$(getHtmlId('ecransComp')).loadComponent('/Clients.waComponent');
 	};// @lock
+
+	function chgState(s){
+	
+		if(curState != s){
+			affState(s)
+			$$(getHtmlId('ecransComp')).loadComponent('/'+s+'.waComponent');
+		}
+	}
+	
+	function affState(s){
+		
+		if(curState != ""){
+			$(getHtmlObj("b"+curState)).css("width", "158");
+			$(getHtmlObj("b"+curState)).removeAttr("disabled");
+		}
+		curState = s;
+		if(curState != ""){
+			$(getHtmlObj("b"+curState)).css("width", "188");
+			$(getHtmlObj("b"+curState)).attr("disabled","disabled");
+		}
+	}
 
 	// @region eventManager// @startlock
 	WAF.addListener(this.id + "_bRapports", "click", bRapports.click, "WAF");
-	WAF.addListener(this.id + "_bTDB", "click", bTDB.click, "WAF");
+	WAF.addListener(this.id + "_bTabDeBord", "click", bTabDeBord.click, "WAF");
 	WAF.addListener(this.id + "_bArticles", "click", bArticles.click, "WAF");
 	WAF.addListener(this.id + "_bClients", "click", bClients.click, "WAF");
 	// @endregion// @endlock
