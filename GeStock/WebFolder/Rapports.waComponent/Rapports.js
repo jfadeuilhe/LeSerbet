@@ -13,19 +13,82 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var bFermer = {};	// @button
+	var vDMoins = {};	// @textField
+	var cbPeriode = {};	// @combobox
 	var dgRapp = {};	// @dataGrid
 	var tabEtatsEvent = {};	// @dataSource
 	var bExecuter = {};	// @button
 	var vSrchRapp = {};	// @textField
 	// @endregion// @endlock
 	
-//	var tabEtats = [];
-//	tabEtats.push({ci_Ref_FE:1, iv_Nom_FE:"Mon état", nv_Descriptif:"Indescriptible"});
-
+	//--- Mes déclarations
+	//Sélection des rapports
 	var srchDef = "(iv_Type_Fichier = 0) && (nv_DispoDansRapports = true)"; 	//Ne prendre que les états autorisés !
-//	var zeEtats = [{ci_Ref_FE:67, iv_Nom_FE:"Récap Commandes", nv_Descriptif:""}];
+	//Gestion des dates
+	var cbPeriode = $$(getHtmlId("cbPeriode"));
+	var vDMoins = $$(getHtmlId("vDMoins"));
+	var $DMoins = $(getHtmlObj("vDMoins"));
+	var vDDebut = $$(getHtmlId("vDDebut"));
+	var $DDebut = $(getHtmlObj("vDDebut"));
+	var vDFin = $$(getHtmlId("vDFin"));
+	var $DFin = $(getHtmlObj("vDFin"));
 		
-	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,{	//Récupérer les états autorisés
+	//--- Mes méthodes
+	function dd(){
+	
+		var PopUp = cbPeriode.getValue();
+		var NbMoins = vDMoins.getValue();
+		
+		//debugger;
+		
+		switch(PopUp){
+			case "D":
+				$DMoins.hide();
+				$DDebut.show();
+				$DFin.show();
+				break;
+				
+			case "A":
+				$DMoins.show();
+				$DDebut.hide();
+				$DFin.hide();
+				break;
+				
+			case "T":
+				$DMoins.show();
+				$DDebut.hide();
+				$DFin.hide();
+				break;
+				
+			case "M":
+				$DMoins.show();
+				$DDebut.hide();
+				$DFin.hide();
+				break;
+				
+			case "S":
+				$DMoins.show();
+				$DDebut.hide();
+				$DFin.hide();
+				break;
+				
+			default: 	//Non
+				$DMoins.hide();
+				$DDebut.hide();
+				$DFin.hide();
+				break;
+		}
+		
+	}
+	
+	//--- Mes Initialisations
+	
+	//Init des dates de recherche
+	dd();
+	
+	//Récupérer les états autorisés
+	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,{	
 					onSuccess: function(event){ 	
 						if(event.result){
 							tabEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
@@ -36,8 +99,9 @@ function constructor (id) {
 					onError: function(error){
 						$$("tInfos").setValue("Ereur : "+error.error[0].message);
 					}});
-		
-	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(2,{	//Récupérer les recherches existantes
+					
+	//Récupérer les recherches existantes
+	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(2,{
 					onSuccess: function(event){ 	
 						if(event.result){
 							tabSrch = event.result.lesFic;//.slice(0); 	//Pour garder une copie !
@@ -50,6 +114,22 @@ function constructor (id) {
 					}});
 	
 	// eventHandlers// @lock
+
+	bFermer.click = function bFermer_click (event)// @startlock
+	{// @endlock
+		$(getHtmlObj("affResultats")).hide();
+		$(getHtmlObj("cont_Selecteur")).show();
+	};// @lock
+
+	vDMoins.keyup = function vDMoins_keyup (event)// @startlock
+	{// @endlock
+		dd();
+	};// @lock
+
+	cbPeriode.change = function cbPeriode_change (event)// @startlock
+	{// @endlock
+		dd();
+	};// @lock
 
 	dgRapp.onRowClick = function dgRapp_onRowClick (event)// @startlock
 	{// @endlock
@@ -64,8 +144,8 @@ function constructor (id) {
 		
 		//var txtSrch = "iv_Num_Table = " + leRapp.iv_Num_Table;
 							
-		$comp.sources.tabSrch.query("iv_Num_Table = " + leRapp.iv_Num_Table); /*,{
-			onSuccess:function(event){
+	//	$comp.sources.tabSrch.query("iv_Num_Table = " + leRapp.iv_Num_Table); /*,{
+	/*		onSuccess:function(event){
 				this[getHtmlId("tabSrch")] = event.entityCollection;
 				$comp.sources.tabSrch.sync();
 			}
@@ -89,22 +169,32 @@ function constructor (id) {
 		o.cli = $$(getHtmlId("vCli")).getValue();
 		o.fou = $$(getHtmlId("vFou")).getValue();
 		o.srch = tabSrch[dgSrch.getSelectedRows()[0]];
+		o.periode = $$(getHtmlId("cbPeriode")).getValue();
+		o.moins = $$(getHtmlId("vDMoins")).getValue();
 		o.du = $$(getHtmlId("vDDebut")).getValue();
 		o.au = $$(getHtmlId("vDFin")).getValue();
 		
 		$$("tInfos").setValue("Etat en cours d'execution...");
+		$("#affWait").show();
 		
 		$comp.sources.sYS_FIC_EXTERNES.WAK_ficExt_Exec(o,{
 								onSuccess: function(event){ 	//code à exécuter lorsque la méthode 4D a terminé
 									$$("tInfos").setValue("");
+									$("#affWait").hide();
 									if(event.result){
 										var o = event.result;//$comp.sources.tabEtats
-										if(o.retour != "Aucun"){
-											
-										}
+										if(o.retour = "OK"){
+											$(getHtmlObj("txtResultats")).html(o.valeur);
+											$(getHtmlObj("txtResultats")).attr("class","scrollOn");
+											$(getHtmlObj("affResultats")).show();
+											$(getHtmlObj("cont_Selecteur")).hide();
+										}else
+											$$("tInfos").setValue(o.retour +" : "+o.valeur );
+										
 									}
 								},
 								onError: function(error){
+									$("#affWait").hide();
 									$$("tInfos").setValue("Ereur : "+error.error[0].message);
 								}});
 	};// @lock
@@ -162,6 +252,9 @@ function constructor (id) {
 	};// @lock
 
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_bFermer", "click", bFermer.click, "WAF");
+	WAF.addListener(this.id + "_vDMoins", "keyup", vDMoins.keyup, "WAF");
+	WAF.addListener(this.id + "_cbPeriode", "change", cbPeriode.change, "WAF");
 	WAF.addListener(this.id + "_dgRapp", "onRowClick", dgRapp.onRowClick, "WAF");
 	WAF.addListener(this.id + "_tabEtats", "onCollectionChange", tabEtatsEvent.onCollectionChange, "WAF");
 	WAF.addListener(this.id + "_bExecuter", "click", bExecuter.click, "WAF");

@@ -19,10 +19,13 @@ function constructor (id) {
 	var bClients = {};	// @button
 	// @endregion// @endlock
 
-	// eventHandlers// @lock
-	
-	var curState = ""; 	//Articles
+	//Mes déclarations
+	var curState = ""; 		//État courant d'affichage
+
+	//Mes initialisations
 	affState("Articles");
+	
+	// eventHandlers// @lock
 	
 	bRapports.click = function bRapports_click (event)// @startlock
 	{// @endlock
