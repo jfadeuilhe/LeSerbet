@@ -13,12 +13,12 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var bEffacer = {};	// @buttonImage
 	var vFStar = {};	// @radioGroup
 	var vActifs = {};	// @checkbox
 	var vMillesime = {};	// @textField
 	var vFourn = {};	// @textField
 	var vDesignation = {};	// @textField
-	var bAppliquer = {};	// @button
 	// @endregion// @endlock
 
 	//$$(getHtmlId("vActifs")).setValue(true);
@@ -26,6 +26,11 @@ function constructor (id) {
 	clearSrch();
 	
 	// eventHandlers// @lock
+
+	bEffacer.click = function bEffacer_click (event)// @startlock
+	{// @endlock
+		clearSrch();
+	};// @lock
 
 	vFStar.change = function vFStar_change (event)// @startlock
 	{// @endlock
@@ -54,10 +59,6 @@ function constructor (id) {
 	
 //	selArticles()
 	
-	bAppliquer.click = function bAppliquer_click (event)// @startlock
-	{// @endlock
-		clearSrch();
-	};// @lock
 	
 	function clearSrch(){
 		$$(getHtmlId("vActifs")).setValue(true);
@@ -70,27 +71,28 @@ function constructor (id) {
 	};
 	
 	function selArticles(){
+
 		var txtDes = $$(getHtmlId("vDesignation")).getValue();
 		var txtFour = $$(getHtmlId("vFourn")).getValue();
 		var txtMill = $$(getHtmlId("vMillesime")).getValue();
 		var valActif = $$(getHtmlId("vActifs")).getValue();
-		var valStar = $$(getHtmlId("vFStar")).getValue();
+		var valStar = $$(getHtmlId("vFStar"))._value; //sgetValue();
 		var txtSrch = "";
-		
+//debugger;
 		if(valActif == true)
 			txtSrch = "(Epuisé = false)";
 		else
 			txtSrch = "(Désignation != '')";
 		if(valStar == "1")
-			txtSrch = " && (Code_Fournis_A.Domaine_Star = true)";
+			txtSrch += " && (Code_Fournis_A.Domaine_Star = true)";
 		else if(valStar == "2")
 			txtSrch = " && (Code_Fournis_A.Domaine_Star = false)";
 		if(txtDes != "")
-			txtSrch = " && (Désignation = '*" + txtDes + "*')";
+			txtSrch += " && ("+txt2Srch_ET(txtDes,"Désignation")+")";	//" && (Désignation = '*" + txtDes + "*')";
 		if(txtMill != "")
-			txtSrch += " && (Millésime = '" + txtMill + "')";
+			txtSrch += " && ("+txt2Srch_OU(txtMill,"Millésime")+")";	//" && (Millésime = '" + txtMill + "')";
 		if(txtFour != "")
-			txtSrch += " && (Titre_Fournis = '" + txtFour + "*')";
+			txtSrch += " && ("+txt2Srch_OU(txtFour,"Titre_Fournis")+")";	//"" && (Titre_Fournis = '" + txtFour + "*')";
 		
 		$comp.sources.articles.query(txtSrch);
 			
@@ -100,16 +102,15 @@ function constructor (id) {
 	};
 	
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_bEffacer", "click", bEffacer.click, "WAF");
 	WAF.addListener(this.id + "_vFStar", "change", vFStar.change, "WAF");
 	WAF.addListener(this.id + "_vActifs", "change", vActifs.change, "WAF");
 	WAF.addListener(this.id + "_vMillesime", "change", vMillesime.change, "WAF");
 	WAF.addListener(this.id + "_vFourn", "change", vFourn.change, "WAF");
 	WAF.addListener(this.id + "_vDesignation", "change", vDesignation.change, "WAF");
-	WAF.addListener(this.id + "_bAppliquer", "click", bAppliquer.click, "WAF");
 	// @endregion// @endlock
 
 	};// @lock
-
 
 }// @startlock
 return constructor;

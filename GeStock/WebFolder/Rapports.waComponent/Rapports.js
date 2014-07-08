@@ -13,6 +13,7 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var vSrchSrch = {};	// @textField
 	var bFermer = {};	// @button
 	var vDMoins = {};	// @textField
 	var cbPeriode = {};	// @combobox
@@ -25,6 +26,7 @@ function constructor (id) {
 	//--- Mes déclarations
 	//Sélection des rapports
 	var srchDef = "(iv_Type_Fichier = 0) && (nv_DispoDansRapports = true)"; 	//Ne prendre que les états autorisés !
+	
 	//Gestion des dates
 	var cbPeriode = $$(getHtmlId("cbPeriode"));
 	var vDMoins = $$(getHtmlId("vDMoins"));
@@ -34,7 +36,8 @@ function constructor (id) {
 	var vDFin = $$(getHtmlId("vDFin"));
 	var $DFin = $(getHtmlObj("vDFin"));
 		
-	//--- Mes méthodes
+	//--- Mes méthodes ---
+	
 	function dd(){
 	
 		var PopUp = cbPeriode.getValue();
@@ -82,17 +85,94 @@ function constructor (id) {
 		
 	}
 	
-	//--- Mes Initialisations
+	function execSrch(quoi){
+		
+		var txtDes;
+		var txtSrchR, txtSrchE, txtInfo;
+		var lst;
+		
+	//debugger;
+		
+		$$("tInfos").setValue("");
+		txtInfo = "";
+		
+		//Appliquer la recherche sur les Etats
+		if(quoi == 1){ 		//Faire Rapports, sinon que recherches
+			
+			txtDes = $$(getHtmlId("vSrchRapp")).getValue();
+			txtSrchR = "";
+			
+			if(txtDes != ""){
+				lst = txtDes.split(" ");
+				txtSrchR = "(iv_Nom_FE == '*"+lst[0]+"*')";
+				if(lst.length > 1){
+					for(var i=1; i<lst.length; i++){
+						if(lst[i] != "")
+							txtSrchR += " && (iv_Nom_FE == '*"+lst[i]+"*')";
+					}
+				} 
+				txtInfo = "Rapports : " + txtSrchR;
+			}
+			//tabEtats=srcEtats.slice(0);
+			$comp.sources.tabEtats.query(txtSrchR,{
+								//destinationDataSource:tabEtats,
+								onSuccess: function(event){ 	//code à exécuter lorsque la méthode 4D a terminé
+									//$comp.sources.tabEtats.sync();
+									//alert("R OK");
+								},
+								onError: function(error){
+									alert("Ereur R : "+error.error[0].message);
+								}});
+		}
+		
+		//Apliquer la recherche sur les Recherches
+		txtDes = $$(getHtmlId("vSrchSrch")).getValue();
+		//var leRapp = tabEtats[$$(getHtmlId("dgRapp")).getSelectedRows()[0]];
+		if($comp.sources.tabEtats.iv_Num_Table != null)
+			txtSrchE ="(iv_Num_Table = " + $comp.sources.tabEtats.iv_Num_Table+")"; 
+		else
+			txtSrchE = "";
+			
+		if(txtDes != ""){
+			lst = txtDes.split(" ");
+			if(txtSrchE!="")
+				txtSrchE += " && ";
+			txtSrchE += "(iv_Nom_FE = '*"+lst[0]+"*')";
+			if(lst.length > 1){
+				for(var i=1; i<lst.length; i++){
+					if(lst[i] != "")
+						txtSrchE += " && (iv_Nom_FE = '*"+lst[i]+"*')";
+				}
+			} 
+		}
+		if(txtSrchE != "")
+			txtInfo += " Etats : " + txtSrchE;
+		$comp.sources.tabSrch.query(txtSrchE,{
+								onSuccess: function(event){ 	//code à exécuter lorsque la méthode 4D a terminé
+									//alert("E OK");
+									//$comp.sources.tabSrch.sync();
+								},
+								onError: function(error){
+									alert("Ereur E : "+error.error[0].message);
+								}});
+		
+		$$("tInfos").setValue(txtInfo);
+		
+	}
+	
+	//--- Mes Initialisations ---
 	
 	//Init des dates de recherche
 	dd();
+	execSrch(0);
 	
 	//Récupérer les états autorisés
 	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,{	
 					onSuccess: function(event){ 	
 						if(event.result){
+							srcEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
 							tabEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
-							this[getHtmlId("tabEtats")] = event.result.lesFic; 
+							this[getHtmlId("tabEtats")] = tabEtats; //event.result.lesFic; 
 							$comp.sources.tabEtats.sync();
 						}
 					},
@@ -115,6 +195,62 @@ function constructor (id) {
 	
 	// eventHandlers// @lock
 
+	vSrchSrch.keyup = function vSrchSrch_keyup (event)// @startlock
+	{// @endlock
+		execSrch(0);
+		
+//		var txtDes = $$(getHtmlId("vSrchSrch")).getValue();
+//		var txtSrch = "";
+//		var pris = false;
+//		
+//		$$("tInfos").setValue("");
+//		
+//		if(txtDes != ""){
+//			var lst = txtDes.split(" ");
+//			var newTab = [];
+//			
+//			for(var l=0; l<tabEtats.length; l++){
+//				pris = false;
+//				
+//				if(tabEtats[l].iv_Nom_FE == '*'+lst[0]+'*'){
+//					pris = true;
+//					for(var i=1; i<lst.length; i++){
+//						if(tabEtats[l].iv_Nom_FE != '*'+lst[0]+'*')
+//							pris = false;
+//					}
+//				}
+//				
+//				if(pris)
+//					newTab.push(tabEtats[l]);
+//			}
+//			
+//			this[getHtmlId("tabEtats")] = newTab;
+//			
+//		} else {
+//			this[getHtmlId("tabEtats")] = tabEtats;
+//		}
+//		
+//		$comp.sources.tabSrch.sync();
+		
+		
+	/*	$comp.sources.tabEtats.all(); */
+	
+//		if(txtDes != ""){
+//			var lst = txtDes.split(" ");
+//			txtSrch = "(iv_Nom_FE = '*"+lst[0]+"*')";
+//			if(lst.length > 1){
+//				for(var i=1; i<lst.length; i++){
+//					if(lst[i] != "")
+//						txtSrch += " && (iv_Nom_FE = '*"+lst[i]+"*')";
+//				}
+//			} 
+//			$$("tInfos").setValue("Filtre : " + txtSrch);
+//		}
+//		$comp.sources.tabEtats.query(txtSrch);
+		
+		/*$comp.sources.tabEtats.sync();*/
+	};// @lock
+
 	bFermer.click = function bFermer_click (event)// @startlock
 	{// @endlock
 		$(getHtmlObj("affResultats")).hide();
@@ -133,7 +269,9 @@ function constructor (id) {
 
 	dgRapp.onRowClick = function dgRapp_onRowClick (event)// @startlock
 	{// @endlock
-		var leRapp = tabEtats[$$(getHtmlId("dgRapp")).getSelectedRows()[0]];
+		execSrch(0);
+		
+	//	var leRapp = tabEtats[$$(getHtmlId("dgRapp")).getSelectedRows()[0]];
 		//var dgSrch = $$(getHtmlId("dgSrch"));
 		
 	/*	$comp.sources.tabSrch.query("",{
@@ -201,57 +339,11 @@ function constructor (id) {
 
 	vSrchRapp.keyup = function vSrchRapp_keyup (event)// @startlock
 	{// @endlock
-		var txtDes = $$(getHtmlId("vSrchRapp")).getValue();
-		var txtSrch = "";
-		var pris = false;
-		
-		$$("tInfos").setValue("");
-		if(txtDes != ""){
-			var lst = txtDes.split(" ");
-			var newTab = [];
-			
-			for(var l=0; l<tabEtats.length; l++){
-				pris = false;
-				
-				if(tabEtats[l].iv_Nom_FE == '*'+lst[0]+'*'){
-					pris = true;
-					for(var i=1; i<lst.length; i++){
-						if(tabEtats[l].iv_Nom_FE != '*'+lst[0]+'*')
-							pris = false;
-					}
-				}
-				
-				if(pris)
-					newTab.push(tabEtats[l]);
-			}
-			
-			this[getHtmlId("tabEtats")] = newTab;
-			
-		} else {
-			this[getHtmlId("tabEtats")] = tabEtats;
-		}
-		
-		$comp.sources.tabEtats.sync();
-		
-		
-	/*	$comp.sources.tabEtats.all();
-		$$("tInfos").setValue("");
-		if(txtDes != ""){
-			var lst = txtDes.split(" ");
-			txtSrch = "(iv_Nom_FE = '*"+lst[0]+"*')";
-			if(lst.length > 1){
-				for(var i=1; i<lst.length; i++){
-					if(lst[i] != "")
-						txtSrch += " && (iv_Nom_FE = '*"+lst[i]+"*')";
-				}
-			} 
-			$$("tInfos").setValue("Filtre : " + txtSrch);
-		}
-		$comp.sources.tabEtats.query(txtSrch);
-		$comp.sources.tabEtats.sync();*/
+		execSrch(1);
 	};// @lock
 
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_vSrchSrch", "keyup", vSrchSrch.keyup, "WAF");
 	WAF.addListener(this.id + "_bFermer", "click", bFermer.click, "WAF");
 	WAF.addListener(this.id + "_vDMoins", "keyup", vDMoins.keyup, "WAF");
 	WAF.addListener(this.id + "_cbPeriode", "change", cbPeriode.change, "WAF");
