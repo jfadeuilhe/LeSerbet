@@ -13,6 +13,7 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var bFournisseurs = {};	// @button
 	var bRapports = {};	// @button
 	var bTabDeBord = {};	// @button
 	var bArticles = {};	// @button
@@ -26,6 +27,11 @@ function constructor (id) {
 	affState("Articles");
 	
 	// eventHandlers// @lock
+
+	bFournisseurs.click = function bFournisseurs_click (event)// @startlock
+	{// @endlock
+		chgState("Fournisseurs"); //$$(getHtmlId('ecransComp')).loadComponent('/Articles.waComponent');
+	};// @lock
 	
 	bRapports.click = function bRapports_click (event)// @startlock
 	{// @endlock
@@ -69,6 +75,7 @@ function constructor (id) {
 	}
 
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_bFournisseurs", "click", bFournisseurs.click, "WAF");
 	WAF.addListener(this.id + "_bRapports", "click", bRapports.click, "WAF");
 	WAF.addListener(this.id + "_bTabDeBord", "click", bTabDeBord.click, "WAF");
 	WAF.addListener(this.id + "_bArticles", "click", bArticles.click, "WAF");

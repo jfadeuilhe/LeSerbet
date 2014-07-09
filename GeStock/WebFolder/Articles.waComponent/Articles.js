@@ -10,6 +10,8 @@ function constructor (id) {
 	this.name = 'Articles';
 	// @endregion// @endlock
 
+	var srchTimeout; 	//Pour gérer un délais avant recherche
+	
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock

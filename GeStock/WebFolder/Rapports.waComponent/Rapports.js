@@ -38,6 +38,7 @@ function constructor (id) {
 		
 	//--- Mes méthodes ---
 	
+	
 	function dd(){
 	
 		var PopUp = cbPeriode.getValue();
@@ -91,7 +92,7 @@ function constructor (id) {
 		var txtSrchR, txtSrchE, txtInfo;
 		var lst;
 		
-	//debugger;
+	debugger;
 		
 		$$("tInfos").setValue("");
 		txtInfo = "";
@@ -101,60 +102,29 @@ function constructor (id) {
 			
 			txtDes = $$(getHtmlId("vSrchRapp")).getValue();
 			txtSrchR = "";
-			
 			if(txtDes != ""){
-				lst = txtDes.split(" ");
-				txtSrchR = "(iv_Nom_FE == '*"+lst[0]+"*')";
-				if(lst.length > 1){
-					for(var i=1; i<lst.length; i++){
-						if(lst[i] != "")
-							txtSrchR += " && (iv_Nom_FE == '*"+lst[i]+"*')";
-					}
-				} 
+				txtSrchR = txt2Srch_ET(txtDes,"iv_Nom_FE");
 				txtInfo = "Rapports : " + txtSrchR;
 			}
-			//tabEtats=srcEtats.slice(0);
-			$comp.sources.tabEtats.query(txtSrchR,{
-								//destinationDataSource:tabEtats,
-								onSuccess: function(event){ 	//code à exécuter lorsque la méthode 4D a terminé
-									//$comp.sources.tabEtats.sync();
-									//alert("R OK");
-								},
-								onError: function(error){
-									alert("Ereur R : "+error.error[0].message);
-								}});
+			$comp.sources.tabEtats.query(txtSrchR);
+			
 		}
 		
 		//Apliquer la recherche sur les Recherches
 		txtDes = $$(getHtmlId("vSrchSrch")).getValue();
-		//var leRapp = tabEtats[$$(getHtmlId("dgRapp")).getSelectedRows()[0]];
 		if($comp.sources.tabEtats.iv_Num_Table != null)
 			txtSrchE ="(iv_Num_Table = " + $comp.sources.tabEtats.iv_Num_Table+")"; 
 		else
 			txtSrchE = "";
 			
 		if(txtDes != ""){
-			lst = txtDes.split(" ");
 			if(txtSrchE!="")
-				txtSrchE += " && ";
-			txtSrchE += "(iv_Nom_FE = '*"+lst[0]+"*')";
-			if(lst.length > 1){
-				for(var i=1; i<lst.length; i++){
-					if(lst[i] != "")
-						txtSrchE += " && (iv_Nom_FE = '*"+lst[i]+"*')";
-				}
-			} 
+				txtSrchE += ' && ';
+			txtSrchE += txt2Srch_ET(txtDes,"iv_Nom_FE");
 		}
 		if(txtSrchE != "")
 			txtInfo += " Etats : " + txtSrchE;
-		$comp.sources.tabSrch.query(txtSrchE,{
-								onSuccess: function(event){ 	//code à exécuter lorsque la méthode 4D a terminé
-									//alert("E OK");
-									//$comp.sources.tabSrch.sync();
-								},
-								onError: function(error){
-									alert("Ereur E : "+error.error[0].message);
-								}});
+		$comp.sources.tabSrch.query(txtSrchE);
 		
 		$$("tInfos").setValue(txtInfo);
 		

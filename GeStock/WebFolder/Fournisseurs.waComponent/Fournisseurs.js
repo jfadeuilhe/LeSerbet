@@ -7,32 +7,30 @@ function constructor (id) {
 
 	// @region beginComponentDeclaration// @startlock
 	var $comp = this;
-	this.name = 'Clients';
+	this.name = 'Fournisseurs';
 	// @endregion// @endlock
-	
+
 	var srchTimeout; 	//Pour gérer un délais avant recherche
 	
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
 	var vActifs = {};	// @checkbox
-	var bAppliquer = {};	// @button
+	var bEffacer = {};	// @button
 	var id_vDesignation = {};	// @textField
 	// @endregion// @endlock
 
 	// eventHandlers// @lock
-//debugger;
-	selClient();
 
 	vActifs.change = function vActifs_change (event)// @startlock
 	{// @endlock
-		selClient();
+		selFourn();
 	};// @lock
 
-	bAppliquer.click = function bAppliquer_click (event)// @startlock
+	bEffacer.click = function bEffacer_click (event)// @startlock
 	{// @endlock
 		$$(getHtmlId("id_vDesignation")).setValue("");
-		selClient();
+		selFourn();
 	};// @lock
 
 	id_vDesignation.keyup = function id_vDesignation_keyup (event)// @startlock
@@ -40,29 +38,19 @@ function constructor (id) {
 		if(srchTimeout != null)
 			clearTimeout(srchTimeout);
 		
-		srchTimeout = setTimeout(selClient,500);
+		srchTimeout = setTimeout(selFourn,500);
 	};// @lock
 
-	function selClient(){
+	function selFourn(){
 		var tmpTxt = $$(getHtmlId("id_vDesignation")).getValue();
 		var valActif = $$(getHtmlId("vActifs")).getValue();
 		
-
 		var txtSrch = "";
 				
 		if(tmpTxt!=""){
 		
-			txtSrch = txt2Srch_OU(tmpTxt,"Titre,Nom,Contact");
+			txtSrch = txt2Srch_OU(tmpTxt,"Titre,Nom,Contact,Ville");
 //debugger;	
-			
-//			var lst = tmpTxt.split(" ");
-//			txtSrch = "(((Titre = '*"+lst[0]+"*') || (Nom = '*"+lst[0]+"*') || (Contact = '*"+lst[0]+"*'))";
-//			if(lst.length > 1){
-//				for(var i=1; i<lst.length; i++){
-//					if(lst[i] != "")
-//						txtSrch += " || ((Titre = '*"+lst[i]+"*') || (Nom = '*"+lst[i]+"*') || (Contact = '*"+lst[i]+"*'))";
-//				}
-//			} 
 
 			if(valActif)
 				txtSrch = "((Inactif = false) && "+txtSrch+")";
@@ -71,16 +59,17 @@ function constructor (id) {
 				txtSrch = "(Inactif = false)";
 		}
 			
-		$comp.sources.clients.query(txtSrch); 	//'Titre = :1 || Nom = :1 || Contact = :1',{ params: ["*" + tmpTxt + "*"]});
+		$comp.sources.fournisseurs.query(txtSrch); 	//'Titre = :1 || Nom = :1 || Contact = :1',{ params: ["*" + tmpTxt + "*"]});
 	};
-	
+
 	// @region eventManager// @startlock
 	WAF.addListener(this.id + "_vActifs", "change", vActifs.change, "WAF");
+	WAF.addListener(this.id + "_bEffacer", "click", bEffacer.click, "WAF");
 	WAF.addListener(this.id + "_id_vDesignation", "keyup", id_vDesignation.keyup, "WAF");
-	WAF.addListener(this.id + "_bAppliquer", "click", bAppliquer.click, "WAF");
 	// @endregion// @endlock
 
 	};// @lock
+
 
 }// @startlock
 return constructor;
