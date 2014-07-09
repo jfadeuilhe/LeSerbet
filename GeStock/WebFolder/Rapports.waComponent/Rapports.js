@@ -38,6 +38,22 @@ function constructor (id) {
 		
 	//--- Mes méthodes ---
 	
+	init();
+	
+	function init(){
+		
+		var DJ = new Date(); 	//Date du jour
+		
+		//debugger;
+		
+		DJ.setDate(1);//Se mettre au 1er du mois en cours
+		vDDebut.setValue(affDate(DJ));
+		
+		DJ.setMonth(DJ.getMonth() + 1); 	//Premier jour du mois suivant...
+		DJ.setDate(DJ.getDate() - 1); 		//Dernier jour du mois en cours !
+		vDFin.setValue(affDate(DJ));
+		
+	};
 	
 	function dd(){
 	
@@ -45,6 +61,9 @@ function constructor (id) {
 		var NbMoins = vDMoins.getValue();
 		
 		//debugger;
+		
+		var DJ = new Date(); 	//Date du jour
+		
 		
 		switch(PopUp){
 			case "D":
@@ -84,7 +103,7 @@ function constructor (id) {
 				break;
 		}
 		
-	}
+	};
 	
 	function execSrch(quoi){
 		
@@ -92,7 +111,7 @@ function constructor (id) {
 		var txtSrchR, txtSrchE, txtInfo;
 		var lst;
 		
-	debugger;
+//	debugger;
 		
 		$$("tInfos").setValue("");
 		txtInfo = "";
@@ -128,7 +147,7 @@ function constructor (id) {
 		
 		$$("tInfos").setValue(txtInfo);
 		
-	}
+	};
 	
 	//--- Mes Initialisations ---
 	
