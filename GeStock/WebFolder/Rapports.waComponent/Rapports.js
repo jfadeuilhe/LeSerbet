@@ -13,7 +13,7 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
-	var vSrchSrch = {};	// @textField
+	var dgSrch = {};	// @dataGrid
 	var bFermer = {};	// @button
 	var vDMoins = {};	// @textField
 	var cbPeriode = {};	// @combobox
@@ -113,37 +113,71 @@ function constructor (id) {
 		
 //	debugger;
 		
+		txtDes = $$(getHtmlId("vSrchRapp")).getValue();
+		
 		$$("tInfos").setValue("");
 		txtInfo = "";
 		
-		//Appliquer la recherche sur les Etats
-		if(quoi == 1){ 		//Faire Rapports, sinon que recherches
-			
-			txtDes = $$(getHtmlId("vSrchRapp")).getValue();
-			txtSrchR = "";
-			if(txtDes != ""){
-				txtSrchR = txt2Srch_ET(txtDes,"iv_Nom_FE");
-				txtInfo = "Rapports : " + txtSrchR;
-			}
-			$comp.sources.tabEtats.query(txtSrchR);
-			
-		}
+		//Récupérer les états autorisés
+		$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,txtDes,{	
+				onSuccess: function(event){ 	
+					if(event.result){
+						srcEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
+						tabEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
+						this[getHtmlId("tabEtats")] = tabEtats; //event.result.lesFic; 
+						$comp.sources.tabEtats.sync();
+								
+								//Récupérer les recherches existantes
+						$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(2,{
+							onSuccess: function(event){ 	
+								if(event.result){
+									tabSrch = event.result.lesFic;//.slice(0); 	//Pour garder une copie !
+									this[getHtmlId("tabSrch")] = event.result.lesFic; 
+									$comp.sources.tabSrch.sync();
+									
+									if($comp.sources.tabEtats.iv_Num_Table != null)
+										$comp.sources.tabSrch.query("(iv_Num_Table = " + $comp.sources.tabEtats.iv_Num_Table+")"); 
+								}
+							},
+							onError: function(error){
+								$$("tInfos").setValue("Ereur : "+error.error[0].message);
+							}});
+							}
+				},
+				onError: function(error){
+					$$("tInfos").setValue("Ereur : "+error.error[0].message);
+				}});
 		
-		//Apliquer la recherche sur les Recherches
-		txtDes = $$(getHtmlId("vSrchSrch")).getValue();
-		if($comp.sources.tabEtats.iv_Num_Table != null)
-			txtSrchE ="(iv_Num_Table = " + $comp.sources.tabEtats.iv_Num_Table+")"; 
-		else
-			txtSrchE = "";
-			
-		if(txtDes != ""){
-			if(txtSrchE!="")
-				txtSrchE += ' && ';
-			txtSrchE += txt2Srch_ET(txtDes,"iv_Nom_FE");
-		}
-		if(txtSrchE != "")
-			txtInfo += " Etats : " + txtSrchE;
-		$comp.sources.tabSrch.query(txtSrchE);
+		
+		
+//		//Appliquer la recherche sur les Etats
+//		if(quoi == 1){ 		//Faire Rapports, sinon que recherches
+//			
+//			txtDes = $$(getHtmlId("vSrchRapp")).getValue();
+//			txtSrchR = "";
+//			if(txtDes != ""){
+//				txtSrchR = txt2Srch_ET(txtDes,"iv_Nom_FE");
+//				txtInfo = "Rapports : " + txtSrchR;
+//			}
+//			$comp.sources.tabEtats.query(txtSrchR);
+//			
+//		}
+//		
+//		//Apliquer la recherche sur les Recherches
+//		//txtDes = $$(getHtmlId("vSrchSrch")).getValue();
+//		if($comp.sources.tabEtats.iv_Num_Table != null)
+//			txtSrchE ="(iv_Num_Table = " + $comp.sources.tabEtats.iv_Num_Table+")"; 
+//		else
+//			txtSrchE = "";
+//			
+////		if(txtDes != ""){
+////			if(txtSrchE!="")
+////				txtSrchE += ' && ';
+////			txtSrchE += txt2Srch_ET(txtDes,"iv_Nom_FE");
+////		}
+//		if(txtSrchE != "")
+//			txtInfo += " Etats : " + txtSrchE;
+//		$comp.sources.tabSrch.query(txtSrchE);
 		
 		$$("tInfos").setValue(txtInfo);
 		
@@ -155,89 +189,38 @@ function constructor (id) {
 	dd();
 	execSrch(0);
 	
-	//Récupérer les états autorisés
-	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,{	
-					onSuccess: function(event){ 	
-						if(event.result){
-							srcEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
-							tabEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
-							this[getHtmlId("tabEtats")] = tabEtats; //event.result.lesFic; 
-							$comp.sources.tabEtats.sync();
-						}
-					},
-					onError: function(error){
-						$$("tInfos").setValue("Ereur : "+error.error[0].message);
-					}});
-					
-	//Récupérer les recherches existantes
-	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(2,{
-					onSuccess: function(event){ 	
-						if(event.result){
-							tabSrch = event.result.lesFic;//.slice(0); 	//Pour garder une copie !
-							this[getHtmlId("tabSrch")] = event.result.lesFic; 
-							$comp.sources.tabSrch.sync();
-						}
-					},
-					onError: function(error){
-						$$("tInfos").setValue("Ereur : "+error.error[0].message);
-					}});
+//	//Récupérer les états autorisés
+//	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(0,{	
+//					onSuccess: function(event){ 	
+//						if(event.result){
+//							srcEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
+//							tabEtats = event.result.lesFic.slice(0); 	//Pour garder une copie !
+//							this[getHtmlId("tabEtats")] = tabEtats; //event.result.lesFic; 
+//							$comp.sources.tabEtats.sync();
+//						}
+//					},
+//					onError: function(error){
+//						$$("tInfos").setValue("Ereur : "+error.error[0].message);
+//					}});
+//					
+//	//Récupérer les recherches existantes
+//	$comp.sources.sYS_FIC_EXTERNES.WAK_FicExt_Get(2,{
+//					onSuccess: function(event){ 	
+//						if(event.result){
+//							tabSrch = event.result.lesFic;//.slice(0); 	//Pour garder une copie !
+//							this[getHtmlId("tabSrch")] = event.result.lesFic; 
+//							$comp.sources.tabSrch.sync();
+//						}
+//					},
+//					onError: function(error){
+//						$$("tInfos").setValue("Ereur : "+error.error[0].message);
+//					}});
 	
 	// eventHandlers// @lock
 
-	vSrchSrch.keyup = function vSrchSrch_keyup (event)// @startlock
+	dgSrch.onRowClick = function dgSrch_onRowClick (event)// @startlock
 	{// @endlock
-		execSrch(0);
-		
-//		var txtDes = $$(getHtmlId("vSrchSrch")).getValue();
-//		var txtSrch = "";
-//		var pris = false;
-//		
-//		$$("tInfos").setValue("");
-//		
-//		if(txtDes != ""){
-//			var lst = txtDes.split(" ");
-//			var newTab = [];
-//			
-//			for(var l=0; l<tabEtats.length; l++){
-//				pris = false;
-//				
-//				if(tabEtats[l].iv_Nom_FE == '*'+lst[0]+'*'){
-//					pris = true;
-//					for(var i=1; i<lst.length; i++){
-//						if(tabEtats[l].iv_Nom_FE != '*'+lst[0]+'*')
-//							pris = false;
-//					}
-//				}
-//				
-//				if(pris)
-//					newTab.push(tabEtats[l]);
-//			}
-//			
-//			this[getHtmlId("tabEtats")] = newTab;
-//			
-//		} else {
-//			this[getHtmlId("tabEtats")] = tabEtats;
-//		}
-//		
-//		$comp.sources.tabSrch.sync();
-		
-		
-	/*	$comp.sources.tabEtats.all(); */
-	
-//		if(txtDes != ""){
-//			var lst = txtDes.split(" ");
-//			txtSrch = "(iv_Nom_FE = '*"+lst[0]+"*')";
-//			if(lst.length > 1){
-//				for(var i=1; i<lst.length; i++){
-//					if(lst[i] != "")
-//						txtSrch += " && (iv_Nom_FE = '*"+lst[i]+"*')";
-//				}
-//			} 
-//			$$("tInfos").setValue("Filtre : " + txtSrch);
-//		}
-//		$comp.sources.tabEtats.query(txtSrch);
-		
-		/*$comp.sources.tabEtats.sync();*/
+		$$(getHtmlId("cbAvecRecherche")).setValue(true);
 	};// @lock
 
 	bFermer.click = function bFermer_click (event)// @startlock
@@ -290,12 +273,15 @@ function constructor (id) {
 		var dgRapp = $$(getHtmlId("dgRapp"));	//Récupérer la datagrid
 		var dgSrch = $$(getHtmlId("dgSrch"));	//Récupérer la datagrid
 		var o = {};
-		
+	debugger;
 		o.quoi = "ExecRapport";
-		o.quel = tabEtats[dgRapp.getSelectedRows()[0]];
+		o.quel = tabEtats[dgRapp.getSelectedRows()[0]];//$comp.sources.tabEtats ;//
 		o.cli = $$(getHtmlId("vCli")).getValue();
 		o.fou = $$(getHtmlId("vFou")).getValue();
-		o.srch = tabSrch[dgSrch.getSelectedRows()[0]];
+		if($$(getHtmlId("cbAvecRecherche")).getValue() == true)
+			o.srch = tabSrch[dgSrch.getSelectedRows()[0]];
+		else
+			o.srch = null;
 		o.periode = $$(getHtmlId("cbPeriode")).getValue();
 		o.moins = $$(getHtmlId("vDMoins")).getValue();
 		o.du = $$(getHtmlId("vDDebut")).getValue();
@@ -332,7 +318,7 @@ function constructor (id) {
 	};// @lock
 
 	// @region eventManager// @startlock
-	WAF.addListener(this.id + "_vSrchSrch", "keyup", vSrchSrch.keyup, "WAF");
+	WAF.addListener(this.id + "_dgSrch", "onRowClick", dgSrch.onRowClick, "WAF");
 	WAF.addListener(this.id + "_bFermer", "click", bFermer.click, "WAF");
 	WAF.addListener(this.id + "_vDMoins", "keyup", vDMoins.keyup, "WAF");
 	WAF.addListener(this.id + "_cbPeriode", "change", cbPeriode.change, "WAF");

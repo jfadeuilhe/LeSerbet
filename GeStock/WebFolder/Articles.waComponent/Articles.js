@@ -15,7 +15,7 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
-	var bEffacer = {};	// @buttonImage
+	var bEffacer = {};	// @button
 	var vFStar = {};	// @radioGroup
 	var vActifs = {};	// @checkbox
 	var vMillesime = {};	// @textField
