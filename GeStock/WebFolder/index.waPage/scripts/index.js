@@ -8,6 +8,8 @@ WAF.onAfterInit = function onAfterInit() {// @lock
 
 //	var tabEtats = [];
 //	tabEtats.push({ci_Ref_FE:1, iv_Nom_FE:"Mon état", nv_Descriptif:"Indescriptible"});
+	vCliDesign = "test";
+	vCliActifs = true;
 
 // eventHandlers// @lock
 

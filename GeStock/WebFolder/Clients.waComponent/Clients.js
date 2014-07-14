@@ -47,7 +47,6 @@ function constructor (id) {
 		var tmpTxt = $$(getHtmlId("id_vDesignation")).getValue();
 		var valActif = $$(getHtmlId("vActifs")).getValue();
 		
-
 		var txtSrch = "";
 				
 		if(tmpTxt!=""){

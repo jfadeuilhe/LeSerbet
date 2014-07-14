@@ -15,9 +15,9 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var id_vFouStar = {};	// @radioGroup
 	var bEffacer = {};	// @button
-	var vFStar = {};	// @radioGroup
-	var vActifs = {};	// @checkbox
+	var id_vArtActifs = {};	// @checkbox
 	var vMillesime = {};	// @textField
 	var vFourn = {};	// @textField
 	var vDesignation = {};	// @textField
@@ -29,17 +29,17 @@ function constructor (id) {
 	
 	// eventHandlers// @lock
 
+	id_vFouStar.change = function id_vFouStar_change (event)// @startlock
+	{// @endlock
+		selArticles();
+	};// @lock
+
 	bEffacer.click = function bEffacer_click (event)// @startlock
 	{// @endlock
 		clearSrch();
 	};// @lock
 
-	vFStar.change = function vFStar_change (event)// @startlock
-	{// @endlock
-		selArticles();
-	};// @lock
-
-	vActifs.change = function vActifs_change (event)// @startlock
+	id_vArtActifs.change = function id_vArtActifs_change (event)// @startlock
 	{// @endlock
 		selArticles();
 	};// @lock
@@ -63,8 +63,8 @@ function constructor (id) {
 	
 	
 	function clearSrch(){
-		$$(getHtmlId("vActifs")).setValue(true);
-		$$(getHtmlId("vFStar")).setValue("0");
+		$$(getHtmlId("id_vArtActifs")).setValue(true);
+		$$(getHtmlId("id_vFouStar")).setValue("0");
 		$$(getHtmlId("vDesignation")).setValue("");
 		$$(getHtmlId("vFourn")).setValue("");
 		$$(getHtmlId("vMillesime")).setValue("");
@@ -77,10 +77,10 @@ function constructor (id) {
 		var txtDes = $$(getHtmlId("vDesignation")).getValue();
 		var txtFour = $$(getHtmlId("vFourn")).getValue();
 		var txtMill = $$(getHtmlId("vMillesime")).getValue();
-		var valActif = $$(getHtmlId("vActifs")).getValue();
-		var valStar = $$(getHtmlId("vFStar"))._value; //sgetValue();
+		var valActif = $$(getHtmlId("id_vArtActifs")).getValue();
+		var valStar = $$(getHtmlId("id_vFouStar"))._value; //sgetValue();
 		var txtSrch = "";
-//debugger;
+debugger;
 		if(valActif == true)
 			txtSrch = "(Epuisé = false)";
 		else
@@ -104,9 +104,9 @@ function constructor (id) {
 	};
 	
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_id_vFouStar", "change", id_vFouStar.change, "WAF");
 	WAF.addListener(this.id + "_bEffacer", "click", bEffacer.click, "WAF");
-	WAF.addListener(this.id + "_vFStar", "change", vFStar.change, "WAF");
-	WAF.addListener(this.id + "_vActifs", "change", vActifs.change, "WAF");
+	WAF.addListener(this.id + "_id_vArtActifs", "change", id_vArtActifs.change, "WAF");
 	WAF.addListener(this.id + "_vMillesime", "change", vMillesime.change, "WAF");
 	WAF.addListener(this.id + "_vFourn", "change", vFourn.change, "WAF");
 	WAF.addListener(this.id + "_vDesignation", "change", vDesignation.change, "WAF");
