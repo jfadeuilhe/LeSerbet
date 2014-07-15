@@ -57,52 +57,79 @@ function constructor (id) {
 		
 	};
 	
+function dansFenetre(contenu) {
+	
+	var fen=window.open("","Resultat","width=800, height=600");
+	
+	fen.document.write("<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu);
+	
+};
+
 	function dd(){
 	
+		var DJ = new Date(); 	//Date du jour
 		var PopUp = cbPeriode.getValue();
 		var NbMoins = vDMoins.getValue();
 		
-		//debugger;
-		
 		var DJ = new Date(); 	//Date du jour
 		
-		
-		switch(PopUp){
-			case "D":
-				$DMoins.hide();
-				$DDebut.show();
-				$DFin.show();
-				break;
-				
-			case "A":
-				$DMoins.show();
-				$DDebut.hide();
-				$DFin.hide();
-				break;
-				
-			case "T":
-				$DMoins.show();
-				$DDebut.hide();
-				$DFin.hide();
-				break;
-				
-			case "M":
-				$DMoins.show();
-				$DDebut.hide();
-				$DFin.hide();
-				break;
-				
-			case "S":
-				$DMoins.show();
-				$DDebut.hide();
-				$DFin.hide();
-				break;
-				
-			default: 	//Non
-				$DMoins.hide();
-				$DDebut.hide();
-				$DFin.hide();
-				break;
+		if(PopUp == "Non"){ 		//Pas de dates
+			$DMoins.hide();
+			$DDebut.hide();
+			$DFin.hide();
+		}else if(PopUp == "D"){ 	//Entre deux dates saisies
+			$DDebut.show();
+			$DFin.show();
+			$DMoins.hide();
+			vDDebut.setReadOnly(false);
+			vDFin.setReadOnly(false);
+		}else{ 						//Période prédéfinie
+			$DDebut.show();
+			$DFin.show();
+			$DMoins.show();
+			vDDebut.setReadOnly(true);
+			vDFin.setReadOnly(true);
+			switch(PopUp){
+				case "A":
+					DJ.setDate(1); 	//Se mettre au 1er du mois en cours
+					DJ.setMonth(0); //Se mettre au 1er mois du mois en course l'année
+					if(NbMoins!=0)
+						DJ.setYear(DJ.getFullYear()-NbMoins);
+					vDDebut.setValue(affDate(DJ));
+					DJ.setYear(DJ.getFullYear()+1);
+					DJ.setDate(DJ.getDate() - 1);
+					vDFin.setValue(affDate(DJ));
+					break;
+					
+				case "T":
+					DJ.setDate(1); 	//Se mettre au 1er du mois en cours
+					DJ.setMonth((Math.floor(DJ.getMonth()/3)-NbMoins)*3);
+					vDDebut.setValue(affDate(DJ));
+					DJ.setMonth(M+3);
+					DJ.setDate(DJ.getDate() - 1);
+					vDFin.setValue(affDate(DJ));
+					break;
+					
+				case "M":
+					DJ.setDate(1); 	//Se mettre au 1er du mois en cours
+					if(NbMoins!=0)
+						DJ.setMonth(DJ.getMonth()-NbMoins);
+					vDDebut.setValue(affDate(DJ));
+					DJ.setMonth(DJ.getMonth()+1);
+					DJ.setDate(DJ.getDate() - 1);
+					vDFin.setValue(affDate(DJ));
+					break;
+					
+				case "S":
+					DJ.setDate(DJ.getDate()-DJ.getDay()); 	//Se mettre au 1er jour de la semaine
+					if(NbMoins!=0)
+						DJ.setDate(DJ.getDate()-(NbMoins*7));
+					vDDebut.setValue(affDate(DJ));
+					DJ.setDate(DJ.getDate()+6); 
+					vDFin.setValue(affDate(DJ));
+					break;
+					
+			}
 		}
 		
 	};
@@ -207,16 +234,16 @@ function constructor (id) {
 	
 		o.quoi = "ExecRapport";
 		o.quel = tabEtats[dgRapp.getSelectedRows()[0]];//$comp.sources.tabEtats ;//
-		o.cli = {"Design": $$(getHtmlId("id_vCliDesign")).getValue(),
+		o.cli = {"Design": $$(getHtmlId("id_vCliDesign")).getValue().split(","),
 				 "Actifs": $$(getHtmlId("id_vCliActifs")).getValue()
 				};
-		o.fou = {"Design": $$(getHtmlId("id_vFouDesign")).getValue(),
+		o.fou = {"Design": $$(getHtmlId("id_vFouDesign")).getValue().split(","),
 				 "Star": $$(getHtmlId("id_vFouStar"))._value,
 				 "Actifs": $$(getHtmlId("id_vFouActifs")).getValue()
 				};
-		o.art = {"Design": $$(getHtmlId("id_vArtDesign")).getValue(),
-				 "Mill": $$(getHtmlId("id_vArtMill")).getValue(),
-				 "Fou": $$(getHtmlId("id_vFouDesign")).getValue(),
+		o.art = {"Design": $$(getHtmlId("id_vArtDesign")).getValue().split(","),
+				 "Mill": $$(getHtmlId("id_vArtMill")).getValue().split(","),
+				 "Fou": $$(getHtmlId("id_vFouDesign")).getValue().split(","),
 				 "Star": $$(getHtmlId("id_vFouStar"))._value,
 				 "Actifs": $$(getHtmlId("id_vArtActifs")).getValue()
 				};
@@ -240,9 +267,10 @@ function constructor (id) {
 										var o = event.result;//$comp.sources.tabEtats
 									//debugger;
 										if(o.retour == "OK"){
-											$(getHtmlObj("txtResultats")).html(o.valeur);
+											$(getHtmlObj("txtResultats")).html("<CENTER>"+o.valeur+"</CENTER>");
 											$(getHtmlObj("txtResultats")).attr("class","scrollOn");
 											$(getHtmlObj("affResultats")).show();
+											dansFenetre(o.valeur);
 											$(getHtmlObj("cont_Selecteur")).hide();
 										}else
 											alert("Rapport non réalisé :\n"+o.valeur ); //$$("tInfos").setValue(o.retour +" : "+o.valeur );

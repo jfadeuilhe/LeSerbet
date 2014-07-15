@@ -63,6 +63,7 @@ function constructor (id) {
 	
 	
 	function clearSrch(){
+		//debugger;
 		$$(getHtmlId("id_vArtActifs")).setValue(true);
 		$$(getHtmlId("id_vFouStar")).setValue("0");
 		$$(getHtmlId("vDesignation")).setValue("");
@@ -80,7 +81,7 @@ function constructor (id) {
 		var valActif = $$(getHtmlId("id_vArtActifs")).getValue();
 		var valStar = $$(getHtmlId("id_vFouStar"))._value; //sgetValue();
 		var txtSrch = "";
-debugger;
+//debugger;
 		if(valActif == true)
 			txtSrch = "(Epuisé = false)";
 		else
