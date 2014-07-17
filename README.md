@@ -1,5 +1,9 @@
-##Welcome to Wakanda##
+##Becky Wasserman & Co.##
 
-This is the place to describe your Wakanda application.
+Outils de gestion à distace pour la base 4D du Serbet.
 
-Please visit [www.wakanda.org](http://www.wakanda.org "wakanda.org") for more information.
+- Accès aux listes
+- Création de rapports
+- Consultation des stocks
+
+[www.leserbet.com](http://www.leserbet.com "leserbet.com")
