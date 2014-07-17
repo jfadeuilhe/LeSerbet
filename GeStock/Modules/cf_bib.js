@@ -4,10 +4,6 @@
 	
 	For more information, refer to http://doc.wakanda.org/Wakanda0.Beta/help/Title/en/page1516.html
 */
-exports.helloWorld = function helloWorld () {
-	return ('Hello world');
-	
-};
 
 exports.dupliquer = function dupliquer(src){
 	
