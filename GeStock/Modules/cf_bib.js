@@ -57,43 +57,7 @@ exports.dupliquer = function dupliquer(src){
 							
 						}
 					}
-					
-					/*var entClass;
-					var ent;
-					switch(i){
-						case "av_jantes":
-							entClass = ds.Av_Avec;
-							ent = ds.Fiche.av_jantes;
-							break;
-							
-						case "ar_jantes":
-							entClass = ds.Ar_Avec;
-							ent = ds.Fiche.ar_jantes;
-							break;
-						
-						case "av_image":
-							entClass = ds.Av_images;
-							ent = ds.Fiche.av_image;
-							break;
-						
-						case "ar_image":
-							entClass = ds.Ar_images;
-							ent = ds.Fiche.ar_image;
-							break;
-					}
-					var attNamesB = entClass.attributes;
-					for(var m=0 ; m<t ; m++){
-						var AJ = entClass.createEntity();
-						debugger;
-						for(var n in attNamesB){
-							if(n != "ID" && n!= "ficheAssociee")
-								AJ[n] = ent[n];
-							else if(n == "ficheAssociee")
-								AJ[n] = dest;
-						}
-					}
-					*/
-					
+			
 					break;
 				
 				case "alias":
