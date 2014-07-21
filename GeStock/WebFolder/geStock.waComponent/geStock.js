@@ -65,12 +65,14 @@ function constructor (id) {
 		
 		if(curState != ""){
 			$(getHtmlObj("b"+curState)).css("width", "158");
-			$(getHtmlObj("b"+curState)).removeAttr("disabled");
+			var bout = $$(getHtmlId("b"+curState));
+			bout.enable();
 		}
 		curState = s;
 		if(curState != ""){
 			$(getHtmlObj("b"+curState)).css("width", "188");
-			$(getHtmlObj("b"+curState)).attr("disabled","disabled");
+			var bout = $$(getHtmlId("b"+curState));
+			bout.disable();
 		}
 	}
 

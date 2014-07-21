@@ -15,6 +15,7 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var lst_Articles = {};	// @dataGrid
 	var id_vFouStar = {};	// @radioGroup
 	var bEffacer = {};	// @button
 	var id_vArtActifs = {};	// @checkbox
@@ -28,6 +29,11 @@ function constructor (id) {
 	clearSrch();
 	
 	// eventHandlers// @lock
+
+	lst_Articles.onRowClick = function lst_Articles_onRowClick (event)// @startlock
+	{// @endlock
+		infoArticle();
+	};// @lock
 
 	id_vFouStar.change = function id_vFouStar_change (event)// @startlock
 	{// @endlock
@@ -97,14 +103,42 @@ function constructor (id) {
 		if(txtFour != "")
 			txtSrch += " && ("+txt2Srch_OU(txtFour,"Titre_Fournis")+")";	//"" && (Titre_Fournis = '" + txtFour + "*')";
 		
-		$comp.sources.articles.query(txtSrch);
-			
+		$comp.sources.articles.query(txtSrch,{
+				onSuccess: function(event){infoArticle();}});
+		
 		//$comp.sources.articles.query(':1',{ params: [ txtSrch + "*"]});
 		//sources.mainLayout_component2_articles.query('Désignation = :1',{ params: ["*" + design + "*"]});
 		//$$('component0_articles').query('Désignation = :1',{ params: ["*" + tmpTxt + "*"]});
 	};
 	
+	function infoArticle(){
+		
+		if($comp.sources.articles.Code_Article != ""){
+			//$$(getHtmlId("id_StockDispo")).setValue("");
+			//$$(getHtmlId("id_PVente")).setValue("");
+			$comp.sources.articles.WAK_Art_Info("P" ,"US",{
+				onSuccess: function(event){
+					if(event.result){
+						//vArticle.codeArt = event.result.codeArt;
+						//vArticle.PVente = event.result.PVente;
+						//vArticle.StockDispo = event.result.StockDispo;
+						if($comp.sources.articles.Code_Article == event.result.codeArt ){
+							$$(getHtmlId("id_StockDispo")).setValue(event.result.StockDispo);
+							$$(getHtmlId("id_PVente")).setValue(event.result.PVente);
+						}else{
+							$$(getHtmlId("id_StockDispo")).setValue("...");
+							$$(getHtmlId("id_PVente")).setValue("...");
+						}
+					}
+				},
+				onError: function(error){
+					$$("tInfos").setValue("Ereur : "+error.error[0].message);
+				}});	
+		}
+	};
+	
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_lst_Articles", "onRowClick", lst_Articles.onRowClick, "WAF");
 	WAF.addListener(this.id + "_id_vFouStar", "change", id_vFouStar.change, "WAF");
 	WAF.addListener(this.id + "_bEffacer", "click", bEffacer.click, "WAF");
 	WAF.addListener(this.id + "_id_vArtActifs", "change", id_vArtActifs.change, "WAF");
