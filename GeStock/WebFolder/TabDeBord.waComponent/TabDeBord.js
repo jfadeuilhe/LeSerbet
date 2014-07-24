@@ -28,27 +28,38 @@ function constructor (id) {
 		
 		$(zoneAff$).html("");
 		
-		$comp.sources.cUMULS_Mens.query("Année >= :1",2004,{
-					onSuccess: function(event){ 
-						$$("tInfos").setValue("Sélection reçue...");
-						var sel = event.dataSource.getEntityCollection();
-//						var txt = "";
-//						for(var n in sel)
-//							txt += n + " - ";
-//						$$("tInfos").setValue(txt);
-						sel.WAK_TDB_Get($$(comboTDB).getValue(),{
-								onSuccess: function(event){ 			//code à exécuter lorsque la méthode 4D a terminé}
-									$(zoneAff$).html(event.result);
-									$$("tInfos").setValue("");
-								},
-								onError: function(error){
-									$$("tInfos").setValue("Ereur : "+error.error[0].message);
-								}});
-						},
-					onError: function(error){
-							$$("tInfos").setValue("Erreur : "+error.error[0].message);
-							}
-					});
+		//debugger;
+		
+		$comp.sources.cUMULS_Mens.WAK_TDB_Get($$(comboTDB).getValue(),{
+			onSuccess: function(event){ 			//code à exécuter lorsque la méthode 4D a terminé}
+				$(zoneAff$).html(event.result);
+				$$("tInfos").setValue("");
+			},
+			onError: function(error){
+				$$("tInfos").setValue("Ereur : "+error.error[0].message);
+		}});
+		
+//		$comp.sources.cUMULS_Mens.query("Année >= :1",2004,{
+//					onSuccess: function(event){ 
+//						$$("tInfos").setValue("Sélection reçue...");
+//						var sel = event.dataSource.getEntityCollection();
+////						var txt = "";
+////						for(var n in sel)
+////							txt += n + " - ";
+////						$$("tInfos").setValue(txt);
+//						sel.WAK_TDB_Get($$(comboTDB).getValue(),{
+//								onSuccess: function(event){ 			//code à exécuter lorsque la méthode 4D a terminé}
+//									$(zoneAff$).html(event.result);
+//									$$("tInfos").setValue("");
+//								},
+//								onError: function(error){
+//									$$("tInfos").setValue("Ereur : "+error.error[0].message);
+//								}});
+//						},
+//					onError: function(error){
+//							$$("tInfos").setValue("Erreur : "+error.error[0].message);
+//							}
+//					});
 	}
 	
 	affTableau();
