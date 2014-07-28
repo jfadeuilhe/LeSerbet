@@ -22,6 +22,8 @@ function constructor (id) {
 
 	// eventHandlers// @lock
 //debugger;
+	//$comp.sources.vCliDesign.sync();
+	
 	selClient();
 
 	vActifs.change = function vActifs_change (event)// @startlock
@@ -44,6 +46,7 @@ function constructor (id) {
 	};// @lock
 
 	function selClient(){
+//		debugger;
 		var tmpTxt = $$(getHtmlId("id_vDesignation")).getValue();
 		var valActif = $$(getHtmlId("vActifs")).getValue();
 		

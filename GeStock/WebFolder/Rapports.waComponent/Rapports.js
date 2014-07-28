@@ -37,6 +37,8 @@ function constructor (id) {
 	var $DDebut = $(getHtmlObj("vDDebut"));
 	var vDFin = $$(getHtmlId("vDFin"));
 	var $DFin = $(getHtmlObj("vDFin"));
+	
+	$comp.sources.vCliDesign.syn();
 		
 	//--- Mes méthodes ---
 	
