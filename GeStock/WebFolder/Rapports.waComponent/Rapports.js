@@ -59,11 +59,30 @@ function constructor (id) {
 	
 function dansFenetre(contenu) {
 	
-	var fen=window.open("","Resultat","width=800, height=600");
+	//debugger;
 	
-	fen.document.write("<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu);
+	var zeTxt = "<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu
+	
+	var fen=ouvrePopup(zeTxt, 800, 600);	//window.open("","Resultat","width=800, height=600");
+	
+	//fen.document.write("<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu);
 	
 };
+
+function ouvrePopup(sPage, iLarg, iHaut){
+	
+	debugger;
+	
+     var iTop=(screen.height-iHaut)/2;
+     var iLeft=(screen.width-iLarg)/2;
+     var fen = window.open("PageVide.html", "_Blank", "resizable=no, location=no, menubar=no, status=no, scrollbars=no, top="+iTop+",left="+iLeft+",width="+iLarg+", height="+iHaut);
+     
+     if(fen)
+	     fen.document.write(sPage);
+     
+     return false;
+ }
+
 
 	function dd(){
 	
