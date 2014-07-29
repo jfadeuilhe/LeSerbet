@@ -46,10 +46,34 @@ function constructor (id) {
 		
 		srchTimeout = setTimeout(selFourn,500);
 	};// @lock
+	
+	this.getCurSrch = function(cs){
+//		cs.vArtActifs=$$(getHtmlId("id_vArtActifs")).getValue();
+//		cs.vArtDeisgn=$$(getHtmlId("vDesignation")).getValue();
+//		cs.vArtMill=$$(getHtmlId("vMillesime")).getValue();
+		cs.vFouActifs=$$(getHtmlId("id_vActifs")).getValue();
+		cs.vFouDesign=$$(getHtmlId("id_vDesignation")).getValue();
+		cs.vFouStar=$$(getHtmlId("id_vFouStar"))._value;
+//		cs.vCliActifs=;
+//		cs.vCliDesign=;
+	};
+	
+	this.setCurSrch = function(cs){
+//		$$(getHtmlId("id_vArtActifs")).setValue(cs.vArtActifs);
+//		$$(getHtmlId("vDesignation")).setValue(cs.vArtDeisgn);
+//		$$(getHtmlId("vMillesime")).setValue(cs.vArtMill);
+		$$(getHtmlId("id_vActifs")).setValue(cs.vFouActifs);
+		$$(getHtmlId("id_vDesignation")).setValue(cs.vFouDesign);
+		$$(getHtmlId("id_vFouStar"))._value=cs.vFouStar;
+//		cs.vCliActifs=;
+//		cs.vCliDesign=;
 
+		selFourn();
+	};
+	
 	function selFourn(){
-		var tmpTxt = $$(getHtmlId("id_vDesignation")).getValue();
 		var valActif = $$(getHtmlId("id_vActifs")).getValue();
+		var tmpTxt = $$(getHtmlId("id_vDesignation")).getValue();
 		var valStar = $$(getHtmlId("id_vFouStar"))._value; 
 		
 		var txtSrch = "";

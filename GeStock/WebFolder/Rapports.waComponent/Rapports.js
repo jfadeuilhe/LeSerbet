@@ -38,8 +38,8 @@ function constructor (id) {
 	var vDFin = $$(getHtmlId("vDFin"));
 	var $DFin = $(getHtmlObj("vDFin"));
 	
-	$comp.sources.vCliDesign.syn();
-		
+	//$comp.sources.vCliDesign.syn();
+	
 	//--- Mes méthodes ---
 	
 	function init(){
@@ -247,6 +247,28 @@ function ouvrePopup(sPage, iLarg, iHaut){
 		srchRech();
 	};// @lock
 
+	this.getCurSrch = function(cs){
+		cs.vArtActifs=$$(getHtmlId("id_vArtActifs")).getValue();
+		cs.vArtDeisgn=$$(getHtmlId("id_vArtDesign")).getValue();
+		cs.vArtMill=$$(getHtmlId("id_vArtMill")).getValue();
+		cs.vFouActifs=$$(getHtmlId("id_vFouActifs")).getValue();
+		cs.vFouDesign=$$(getHtmlId("id_vFouDesign")).getValue();
+		cs.vFouStar=$$(getHtmlId("id_vFouStar"))._value;
+		cs.vCliActifs=$$(getHtmlId("id_vCliActifs")).getValue();
+		cs.vCliDesign=$$(getHtmlId("id_vCliDesign")).getValue();
+	};
+	
+	this.setCurSrch = function(cs){
+		$$(getHtmlId("id_vArtActifs")).setValue(cs.vArtActifs);
+		$$(getHtmlId("id_vArtDesign")).setValue(cs.vArtDeisgn);
+		$$(getHtmlId("id_vArtMill")).setValue(cs.vArtMill);
+		$$(getHtmlId("id_vFouActifs")).setValue(cs.vFouActifs);
+		$$(getHtmlId("id_vFouDesign")).setValue(cs.vFouDesign);
+		$$(getHtmlId("id_vFouStar"))._value=cs.vFouStar;
+		$$(getHtmlId("id_vCliActifs")).setValue(cs.vCliActifs);
+		$$(getHtmlId("id_vCliDesign")).setValue(cs.vCliDesign);
+	};
+	
 	bExecuter.click = function bExecuter_click (event)// @startlock
 	{// @endlock
 		var dgRapp = $$(getHtmlId("dgRapp"));	//Récupérer la datagrid
@@ -264,8 +286,6 @@ function ouvrePopup(sPage, iLarg, iHaut){
 				};
 		o.art = {"Design": $$(getHtmlId("id_vArtDesign")).getValue().split(","),
 				 "Mill": $$(getHtmlId("id_vArtMill")).getValue().split(","),
-				 "Fou": $$(getHtmlId("id_vFouDesign")).getValue().split(","),
-				 "Star": $$(getHtmlId("id_vFouStar"))._value,
 				 "Actifs": $$(getHtmlId("id_vArtActifs")).getValue()
 				};
 		if($$(getHtmlId("cbAvecRecherche")).getValue() == true)

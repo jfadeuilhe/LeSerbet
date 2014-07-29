@@ -23,20 +23,17 @@ function constructor (id) {
 	var vFourn = {};	// @textField
 	var vDesignation = {};	// @textField
 	// @endregion// @endlock
-
-	//$$(getHtmlId("vActifs")).setValue(true);
-	
-	clearSrch();
 	
 	// eventHandlers// @lock
 
 	lst_Articles.onRowClick = function lst_Articles_onRowClick (event)// @startlock
 	{// @endlock
-		infoArticle();
+		//infoArticle();
 	};// @lock
 
 	id_vFouStar.change = function id_vFouStar_change (event)// @startlock
 	{// @endlock
+		//debugger;
 		selArticles();
 	};// @lock
 
@@ -67,6 +64,29 @@ function constructor (id) {
 	
 //	selArticles()
 	
+	this.getCurSrch = function(cs){
+		cs.vArtActifs=$$(getHtmlId("id_vArtActifs")).getValue();
+		cs.vArtDeisgn=$$(getHtmlId("vDesignation")).getValue();
+		cs.vArtMill=$$(getHtmlId("vMillesime")).getValue();
+//		cs.vFouActifs=;
+		cs.vFouDesign=$$(getHtmlId("vFourn")).getValue();
+		cs.vFouStar=$$(getHtmlId("id_vFouStar"))._value;
+//		cs.vCliActifs=;
+//		cs.vCliDesign=;
+	};
+	
+	this.setCurSrch = function(cs){
+		$$(getHtmlId("id_vArtActifs")).setValue(cs.vArtActifs);
+		$$(getHtmlId("vDesignation")).setValue(cs.vArtDeisgn);
+		$$(getHtmlId("vMillesime")).setValue(cs.vArtMill);
+//		cs.vFouActifs=;
+		$$(getHtmlId("vFourn")).setValue(cs.vFouDesign);
+		$$(getHtmlId("id_vFouStar"))._value=cs.vFouStar;
+//		cs.vCliActifs=;
+//		cs.vCliDesign=;
+
+		selArticles();
+	};
 	
 	function clearSrch(){
 		//debugger;
@@ -80,12 +100,12 @@ function constructor (id) {
 	};
 	
 	function selArticles(){
-
 		var txtDes = $$(getHtmlId("vDesignation")).getValue();
 		var txtFour = $$(getHtmlId("vFourn")).getValue();
 		var txtMill = $$(getHtmlId("vMillesime")).getValue();
 		var valActif = $$(getHtmlId("id_vArtActifs")).getValue();
 		var valStar = $$(getHtmlId("id_vFouStar"))._value; //sgetValue();
+		
 		var txtSrch = "";
 //debugger;
 		if(valActif == true)
@@ -103,12 +123,10 @@ function constructor (id) {
 		if(txtFour != "")
 			txtSrch += " && ("+txt2Srch_OU(txtFour,"Titre_Fournis")+")";	//"" && (Titre_Fournis = '" + txtFour + "*')";
 		
-		$comp.sources.articles.query(txtSrch,{
-				onSuccess: function(event){infoArticle();}});
-		
-		//$comp.sources.articles.query(':1',{ params: [ txtSrch + "*"]});
-		//sources.mainLayout_component2_articles.query('Désignation = :1',{ params: ["*" + design + "*"]});
-		//$$('component0_articles').query('Désignation = :1',{ params: ["*" + tmpTxt + "*"]});
+		$comp.sources.articles.query(txtSrch);//,{
+//				onSuccess: function(event){
+//					//infoArticle();
+//				}});
 	};
 	
 	function infoArticle(){

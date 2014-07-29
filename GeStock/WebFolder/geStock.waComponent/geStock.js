@@ -22,7 +22,16 @@ function constructor (id) {
 
 	//Mes déclarations
 	var curState = ""; 		//État courant d'affichage
-
+	var curSrch = {
+			"vArtActifs":true,
+			"vArtDeisgn":"",
+			"vArtMill":"",
+			"vFouActifs":true,
+			"vFouDesign":"",
+			"vFouStar":"",
+			"vCliActifs":true,
+			"vCliDesign":""
+		};
 	//Mes initialisations
 	affState("Articles");
 	
@@ -54,12 +63,34 @@ function constructor (id) {
 	};// @lock
 
 	function chgState(s){
-	
+
 		if(curState != s){
-			affState(s)
-			$$(getHtmlId('ecransComp')).loadComponent('/'+s+'.waComponent');
+			if(curState != ""){ 	//Récupérer les variables...
+				//debugger;
+				var curComp = $$(getHtmlId("ecransComp"));
+				if(curComp.getCurSrch != null){
+					curComp.getCurSrch(curSrch);
+				}
+			}
+			affState(s); 			//Changer d'état
+			if(curState != ""){ 	//Installer le composant
+				$$(getHtmlId('ecransComp')).loadComponent({
+					path: '/'+curState+'.waComponent',
+					onSuccess: function(){
+						//Remettre les variables
+						setTimeout(appSrch,500);
+				}});
+			} else { 				//Virer le composant ?...
+				$$(getHtmlId('ecransComp')).removeComponent();
+			}
 		}
 	}
+	
+	function appSrch(){
+		var curComp = $$(getHtmlId("ecransComp"));
+		if(curComp.setCurSrch != null)
+			curComp.setCurSrch(curSrch);
+	};
 	
 	function affState(s){
 		
