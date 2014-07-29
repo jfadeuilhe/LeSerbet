@@ -28,12 +28,13 @@ function constructor (id) {
 			"vArtMill":"",
 			"vFouActifs":true,
 			"vFouDesign":"",
-			"vFouStar":"",
+			"vFouStar":"0",
 			"vCliActifs":true,
 			"vCliDesign":""
 		};
+		
 	//Mes initialisations
-	affState("Articles");
+	chgState("Articles");
 	
 	// eventHandlers// @lock
 
