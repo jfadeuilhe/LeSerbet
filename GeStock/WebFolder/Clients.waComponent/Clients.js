@@ -78,16 +78,6 @@ function constructor (id) {
 		if(tmpTxt!=""){
 		
 			txtSrch = txt2Srch_OU(tmpTxt,"Titre,Nom,Contact");
-//debugger;	
-			
-//			var lst = tmpTxt.split(" ");
-//			txtSrch = "(((Titre = '*"+lst[0]+"*') || (Nom = '*"+lst[0]+"*') || (Contact = '*"+lst[0]+"*'))";
-//			if(lst.length > 1){
-//				for(var i=1; i<lst.length; i++){
-//					if(lst[i] != "")
-//						txtSrch += " || ((Titre = '*"+lst[i]+"*') || (Nom = '*"+lst[i]+"*') || (Contact = '*"+lst[i]+"*'))";
-//				}
-//			} 
 
 			if(valActif)
 				txtSrch = "((Inactif = false) && "+txtSrch+")";
@@ -95,8 +85,12 @@ function constructor (id) {
 			if(valActif)
 				txtSrch = "(Inactif = false)";
 		}
-			
-		$comp.sources.clients.query(txtSrch); 	//'Titre = :1 || Nom = :1 || Contact = :1',{ params: ["*" + tmpTxt + "*"]});
+		
+		$$("tInfos").setValue("recherche en cours...");
+		$comp.sources.clients.query(txtSrch,{
+				onSuccess: function(event){
+					$$("tInfos").setValue("");
+				}});
 	};
 	
 	// @region eventManager// @startlock

@@ -67,7 +67,7 @@ function dansFenetre(contenu) {
 	
 	var fen=ouvrePopup(zeTxt, 800, 600);	//window.open("","Resultat","width=800, height=600");
 	
-	//fen.document.write("<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu);
+	fen.document.write(zeTxt);
 	
 };
 
@@ -318,6 +318,7 @@ function ouvrePopup(sPage, iLarg, iHaut){
 									}
 								},
 								onError: function(error){
+									$$("tInfos").setValue("");
 									$("#affWait").hide();
 									alert("Ereur : "+error.error[0].message);
 								}});

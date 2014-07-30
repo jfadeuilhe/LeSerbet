@@ -79,7 +79,7 @@ function constructor (id) {
 					path: '/'+curState+'.waComponent',
 					onSuccess: function(){
 						//Remettre les variables
-						setTimeout(appSrch,500);
+						appSrch(); //setTimeout(appSrch,500);
 				}});
 			} else { 				//Virer le composant ?...
 				$$(getHtmlId('ecransComp')).removeComponent();

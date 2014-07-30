@@ -15,20 +15,24 @@ function constructor (id) {
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
-	var lst_Articles = {};	// @dataGrid
+	var vFourn = {};	// @textField
+	var vMillesime = {};	// @textField
 	var id_vFouStar = {};	// @radioGroup
 	var bEffacer = {};	// @button
 	var id_vArtActifs = {};	// @checkbox
-	var vMillesime = {};	// @textField
-	var vFourn = {};	// @textField
 	var vDesignation = {};	// @textField
 	// @endregion// @endlock
 	
 	// eventHandlers// @lock
 
-	lst_Articles.onRowClick = function lst_Articles_onRowClick (event)// @startlock
+	vFourn.keyup = function vFourn_keyup (event)// @startlock
 	{// @endlock
-		//infoArticle();
+		doSelArticle();
+	};// @lock
+
+	vMillesime.keyup = function vMillesime_keyup (event)// @startlock
+	{// @endlock
+		doSelArticle();
 	};// @lock
 
 	id_vFouStar.change = function id_vFouStar_change (event)// @startlock
@@ -46,23 +50,13 @@ function constructor (id) {
 	{// @endlock
 		selArticles();
 	};// @lock
-
-	vMillesime.change = function vMillesime_change (event)// @startlock
+	
+	vDesignation.keyup = function vDesignation_keyup (event)// @startlock
 	{// @endlock
-		selArticles();
-	};// @lock
-
-	vFourn.change = function vFourn_change (event)// @startlock
-	{// @endlock
-		selArticles();
+		doSelArticle();
 	};// @lock
 	
-	vDesignation.change = function vDesignation_change (event)// @startlock
-	{// @endlock
-		selArticles();
-	};// @lock
-	
-//	selArticles()
+	//Mes Méthodes
 	
 	this.getCurSrch = function(cs){
 		cs.vArtActifs=$$(getHtmlId("id_vArtActifs")).getValue();
@@ -99,6 +93,14 @@ function constructor (id) {
 		selArticles();	
 	};
 	
+	function doSelArticle(){
+		
+		if(srchTimeout != null)
+			clearTimeout(srchTimeout);
+		
+		srchTimeout = setTimeout(selArticles,500);
+	};
+	
 	function selArticles(){
 		var txtDes = $$(getHtmlId("vDesignation")).getValue();
 		var txtFour = $$(getHtmlId("vFourn")).getValue();
@@ -117,16 +119,18 @@ function constructor (id) {
 		else if(valStar == "2")
 			txtSrch = " && (Code_Fournis_A.Domaine_Star = false)";
 		if(txtDes != "")
-			txtSrch += " && ("+txt2Srch_ET(txtDes,"Désignation")+")";	//" && (Désignation = '*" + txtDes + "*')";
+			txtSrch += " && ("+txt2Srch_OU_ET(txtDes,"Désignation,Couleur")+")";	//" && (Désignation = '*" + txtDes + "*')";
 		if(txtMill != "")
 			txtSrch += " && ("+txt2Srch_OU(txtMill,"Millésime")+")";	//" && (Millésime = '" + txtMill + "')";
 		if(txtFour != "")
 			txtSrch += " && ("+txt2Srch_OU(txtFour,"Titre_Fournis")+")";	//"" && (Titre_Fournis = '" + txtFour + "*')";
-		
-		$comp.sources.articles.query(txtSrch);//,{
-//				onSuccess: function(event){
-//					//infoArticle();
-//				}});
+			
+		$$("tInfos").setValue("recherche en cours...");
+		$comp.sources.articles.query(txtSrch,{
+				onSuccess: function(event){
+					$$("tInfos").setValue("");
+					//infoArticle();
+				}});
 	};
 	
 	function infoArticle(){
@@ -156,13 +160,12 @@ function constructor (id) {
 	};
 	
 	// @region eventManager// @startlock
-	WAF.addListener(this.id + "_lst_Articles", "onRowClick", lst_Articles.onRowClick, "WAF");
+	WAF.addListener(this.id + "_vFourn", "keyup", vFourn.keyup, "WAF");
+	WAF.addListener(this.id + "_vMillesime", "keyup", vMillesime.keyup, "WAF");
+	WAF.addListener(this.id + "_vDesignation", "keyup", vDesignation.keyup, "WAF");
 	WAF.addListener(this.id + "_id_vFouStar", "change", id_vFouStar.change, "WAF");
 	WAF.addListener(this.id + "_bEffacer", "click", bEffacer.click, "WAF");
 	WAF.addListener(this.id + "_id_vArtActifs", "change", id_vArtActifs.change, "WAF");
-	WAF.addListener(this.id + "_vMillesime", "change", vMillesime.change, "WAF");
-	WAF.addListener(this.id + "_vFourn", "change", vFourn.change, "WAF");
-	WAF.addListener(this.id + "_vDesignation", "change", vDesignation.change, "WAF");
 	// @endregion// @endlock
 
 	};// @lock

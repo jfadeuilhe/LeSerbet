@@ -80,7 +80,7 @@ function constructor (id) {
 				
 		if(tmpTxt!=""){
 		
-			txtSrch = txt2Srch_OU(tmpTxt,"Titre,Nom,Contact,Ville");
+			txtSrch = txt2Srch_OU_ET(tmpTxt,"Titre,Nom,Contact,Ville");
 			
 			if(valActif)
 				txtSrch = "((Inactif = false) && "+txtSrch+")";
@@ -94,7 +94,11 @@ function constructor (id) {
 		else if(valStar == "2")
 			txtSrch = " && (Code_Fournis_A.Domaine_Star = false)";
 			
-		$comp.sources.fournisseurs.query(txtSrch); 	//'Titre = :1 || Nom = :1 || Contact = :1',{ params: ["*" + tmpTxt + "*"]});
+		$$("tInfos").setValue("recherche en cours...");
+		$comp.sources.fournisseurs.query(txtSrch,{
+				onSuccess: function(event){
+					$$("tInfos").setValue("");
+				}});
 	};
 
 	// @region eventManager// @startlock
