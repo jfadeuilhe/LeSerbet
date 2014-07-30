@@ -11,10 +11,13 @@ function constructor (id) {
 	// @endregion// @endlock
 
 	var srchTimeout; 	//Pour gérer un délais avant recherche
+	var o = null;
 	
 	this.load = function (data) {// @lock
 
 	// @region namespaceDeclaration// @startlock
+	var bOuvrir = {};	// @button
+	var bLastResult = {};	// @button
 	var id_vFouStar = {};	// @radioGroup
 	var dgSrch = {};	// @dataGrid
 	var bFermer = {};	// @button
@@ -58,33 +61,6 @@ function constructor (id) {
 		dd(); 
 		
 	};
-	
-function dansFenetre(contenu) {
-	
-	//debugger;
-	
-	var zeTxt = "<CENTER><BR><FORM><input type=button value='Fermer' onClick='window.close()'></form></CENTER><HR>"+contenu
-	
-	var fen=ouvrePopup(zeTxt, 800, 600);	//window.open("","Resultat","width=800, height=600");
-	
-	fen.document.write(zeTxt);
-	
-};
-
-function ouvrePopup(sPage, iLarg, iHaut){
-	
-	debugger;
-	
-     var iTop=(screen.height-iHaut)/2;
-     var iLeft=(screen.width-iLarg)/2;
-     var fen = window.open("PageVide.html", "_Blank", "resizable=no, location=no, menubar=no, status=no, scrollbars=no, top="+iTop+",left="+iLeft+",width="+iLarg+", height="+iHaut);
-     
-     if(fen)
-	     fen.document.write(sPage);
-     
-     return false;
- }
-
 
 	function dd(){
 	
@@ -216,6 +192,30 @@ function ouvrePopup(sPage, iLarg, iHaut){
 	
 	// eventHandlers// @lock
 
+	bOuvrir.click = function bOuvrir_click (event)// @startlock
+	{// @endlock
+		
+		var fen = window.open("PageVide.html");
+     
+	     if(fen){
+		 	var zeTxt = "<H1>"+o.quel.iv_Nom_FE+"</H1>";
+		 	
+		 	zeTxt += $(getHtmlObj("txtResultats")).html();
+		 	
+		 	fen.document.write(zeTxt);
+		     
+		 }
+		
+		$(getHtmlObj("affResultats")).hide();
+		$(getHtmlObj("cont_Selecteur")).show();
+	};// @lock
+
+	bLastResult.click = function bLastResult_click (event)// @startlock
+	{// @endlock
+		$(getHtmlObj("affResultats")).show();
+		$(getHtmlObj("cont_Selecteur")).hide();
+	};// @lock
+
 	id_vFouStar.change = function id_vFouStar_change (event)// @startlock
 	{// @endlock
 		selArticles();
@@ -273,7 +273,7 @@ function ouvrePopup(sPage, iLarg, iHaut){
 	{// @endlock
 		var dgRapp = $$(getHtmlId("dgRapp"));	//Récupérer la datagrid
 		var dgSrch = $$(getHtmlId("dgSrch"));	//Récupérer la datagrid
-		var o = {};
+		o = {};
 	
 		o.quoi = "ExecRapport";
 		o.quel = tabEtats[dgRapp.getSelectedRows()[0]];//$comp.sources.tabEtats ;//
@@ -305,13 +305,11 @@ function ouvrePopup(sPage, iLarg, iHaut){
 									$$("tInfos").setValue("");
 									$("#affWait").hide();
 									if(event.result){
-										var o = event.result;//$comp.sources.tabEtats
-									//debugger;
+										var o = event.result;
 										if(o.retour == "OK"){
 											$(getHtmlObj("txtResultats")).html("<CENTER>"+o.valeur+"</CENTER>");
 											$(getHtmlObj("txtResultats")).attr("class","scrollOn");
 											$(getHtmlObj("affResultats")).show();
-											dansFenetre(o.valeur);
 											$(getHtmlObj("cont_Selecteur")).hide();
 										}else
 											alert("Rapport non réalisé :\n"+o.valeur ); //$$("tInfos").setValue(o.retour +" : "+o.valeur );
@@ -333,6 +331,8 @@ function ouvrePopup(sPage, iLarg, iHaut){
 	};// @lock
 
 	// @region eventManager// @startlock
+	WAF.addListener(this.id + "_bOuvrir", "click", bOuvrir.click, "WAF");
+	WAF.addListener(this.id + "_bLastResult", "click", bLastResult.click, "WAF");
 	WAF.addListener(this.id + "_id_vFouStar", "change", id_vFouStar.change, "WAF");
 	WAF.addListener(this.id + "_dgSrch", "onRowClick", dgSrch.onRowClick, "WAF");
 	WAF.addListener(this.id + "_bFermer", "click", bFermer.click, "WAF");
