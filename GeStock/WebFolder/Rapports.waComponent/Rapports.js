@@ -1,7 +1,7 @@
 ﻿
 (function Component (id) {// @lock
 
-// Add the code that needs to be shared between components here
+//Add the code that needs to be shared between components here
 	
 function constructor (id) {
 
@@ -194,16 +194,12 @@ function constructor (id) {
 
 	bOuvrir.click = function bOuvrir_click (event)// @startlock
 	{// @endlock
-		
-		var fen = window.open("PageVide.html");
+		 var fen = window.open("PageVide.html");
      
 	     if(fen){
 		 	var zeTxt = "<H1>"+o.quel.iv_Nom_FE+"</H1>";
-		 	
 		 	zeTxt += $(getHtmlObj("txtResultats")).html();
-		 	
 		 	fen.document.write(zeTxt);
-		     
 		 }
 		
 		$(getHtmlObj("affResultats")).hide();

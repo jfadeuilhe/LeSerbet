@@ -210,10 +210,10 @@ WAF.onAfterInit = function onAfterInit() {// @lock
 						vArticle.PVente = event.result.PVente;
 						vArticle.StockDispo = event.result.StockDispo;
 						if(sources.articles.Code_Article == vArticle.codeArt ){
-							$$("id_StockDispo").setValue(vArticle.StockDispo);
+							//$$("id_StockDispo").setValue(vArticle.StockDispo);
 							$$("id_PVente").setValue(vArticle.PVente);
 						}else{
-							$$("id_StockDispo").setValue("...");
+							//$$("id_StockDispo").setValue("...");
 							$$("id_PVente").setValue("...");
 						}
 					}
